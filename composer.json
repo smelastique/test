@@ -2,12 +2,16 @@
     "type": "project",
     "license": "proprietary",
     "require": {
-        "php": "^7.1.3",
+        "php": "^7.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "ext-intl": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*",
         "symfony/console": "*",
         "symfony/flex": "^1.1",
         "symfony/framework-bundle": "*",
+        "symfony/orm-pack": "^1.0",
         "symfony/yaml": "*"
     },
     "require-dev": {
