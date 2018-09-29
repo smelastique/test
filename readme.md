@@ -12,7 +12,7 @@ Installation
 
 - composer install
 - bin/console d:d:c
-- bin/console d:m:m --no-interaction
+- bin/console d:migration:m --no-interaction
 - bin/console d:f:l
 
 Tests
