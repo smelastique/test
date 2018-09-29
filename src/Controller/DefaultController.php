@@ -8,6 +8,7 @@ use App\Entity\Publisher;
 use App\Repository\AuthorRepository;
 use App\Repository\BookRepository;
 use App\Repository\PublisherRepository;
+use Psr\SimpleCache\CacheInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -81,15 +82,23 @@ class DefaultController extends AbstractController
     /**
      * @Route("/books/search/{keyword}", name="books_search",  defaults={"offset": 0, "limit": 10})
      * @Route("/books/search/{keyword}/{offset}/{limit}", name="books_search_paginated", requirements={"offset": "\d+","limit": "\d+"})
+     * @param CacheInterface $cache
      * @param BookRepository $repository
      * @param string $keyword
      * @param int $offset
      * @param int $limit
      * @return JsonResponse
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public function booksSearch(BookRepository $repository, string $keyword, int $offset, int $limit) : JsonResponse
+    public function booksSearch(CacheInterface $cache, BookRepository $repository, string $keyword, int $offset, int $limit) : JsonResponse
     {
-        $books = $repository->search($keyword, $offset, $limit);
+        /* Bonus point for cache? */
+        $books = $cache->get($keyword);
+        if (is_null($books)) {
+            $books = $repository->search($keyword, $offset, $limit);
+            $cache->set($keyword, $books);
+        }
+
         return new JsonResponse($books);
     }
 }
